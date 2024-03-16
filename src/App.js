@@ -32,7 +32,7 @@ function App() {
           <Route exact path="/Gündelik-İşler" component={Tables} />
           <Route exact path="/billing" component={Billing} />
           <Route exact path="/profile" component={Profile} />
-          <Redirect from="*" to="/Ana-Sayfa" />
+
         </Main>
       </Switch>
     </div>

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import React from 'react';
-import {Modal,ModalHeader,ModalBody} from "reactstrap" ;
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   Card,
@@ -22,9 +20,9 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
-
+import ModalForm from "../components/PopUp/ModalForm";
+import ModalFormGörevEkle from "../components/PopUp/ModalFormGörevEkle";
 import Echart from "../components/chart/EChart";
-
 import ava1 from "../assets/images/logo-shopify.svg";
 import ava2 from "../assets/images/logo-atlassian.svg";
 import ava3 from "../assets/images/logo-slack.svg";
@@ -38,7 +36,11 @@ function Home() {
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);
   const [inputValue, setInputValue] = useState('');
   const [modal,setmodal]=useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  function closeModal()  {
+    setModalOpen(false);
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -86,6 +88,20 @@ function Home() {
         className="fill-gray-7"
       ></path>
     </svg>,
+  ];
+  const checkbtn = [
+    <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+      fill="#000"
+    />
+  </svg>
   ];
   const deletebtn = [
     <svg
@@ -174,15 +190,18 @@ function Home() {
       progress: "Tamamlandı",
       buton:(
         <>
-          <Col xs={20} md={20} className="d-flex">
-                          <Button type="primary">ADD NEW CARD</Button>
+        <Col xs={20} md={20} className="d-flex">
+        
+        <Button type="primary">Bitir</Button>
                           <Button type="link" danger>
                           {deletebtn}DELETE
                         </Button>
-                        <Button type="link" className="darkbtn">
-                          {pencil2} EDIT
-                        </Button>
-                    </Col>
+        <Button
+                    type="link"
+                    className="darkbtn"
+                    onClick={() => setmodal(true)}
+                    > {pencil2} Düzenle</Button>
+        </Col>
         </>
       ),
     },
@@ -193,15 +212,19 @@ function Home() {
       progress: "Tamamlammadı",
       buton:(
         <>
-          <Col xs={20} md={20} className="d-flex">
-                          <Button type="primary">ADD NEW CARD</Button>
+        <Col xs={20} md={20} className="d-flex">
+        
+        <Button type="primary">Bitir</Button>
                           <Button type="link" danger>
                           {deletebtn}DELETE
                         </Button>
-                        <Button type="link" className="darkbtn">
-                          {pencil2} EDIT
-                        </Button>
-                    </Col>
+        <Button
+                    type="link"
+                    className="darkbtn"
+                    onClick={() => setmodal(true)}
+                    > {pencil2} Düzenle</Button>
+                    
+        </Col>
         </>
       ),
     },
@@ -212,15 +235,19 @@ function Home() {
       progress: "Tamamlandı",
       buton:(
         <>
-          <Col xs={20} md={20} className="d-flex">
-                          <Button type="primary">ADD NEW CARD</Button>
+        <Col xs={20} md={20} className="d-flex">
+        
+        <Button type="primary">Bitir</Button>
                           <Button type="link" danger>
                           {deletebtn}DELETE
                         </Button>
-                        <Button type="link" className="darkbtn">
-                          {pencil2} EDIT
-                        </Button>
-                    </Col>
+        <Button
+                    type="link"
+                    className="darkbtn"
+                    onClick={() => setmodal(true)}
+                    > {pencil2} Düzenle</Button>
+                    
+        </Col>
         </>
       ),
     },
@@ -231,15 +258,19 @@ function Home() {
       progress: "Tamamlanmadı",
       buton:(
         <>
-          <Col xs={20} md={20} className="d-flex">
-                          <Button type="primary">ADD NEW CARD</Button>
+        <Col xs={20} md={20} className="d-flex">
+        
+        <Button type="primary">Bitir</Button>
                           <Button type="link" danger>
                           {deletebtn}DELETE
                         </Button>
-                        <Button type="link" className="darkbtn">
-                          {pencil2} EDIT
-                        </Button>
-                    </Col>
+        <Button
+                    type="link"
+                    className="darkbtn"
+                    onClick={() => setmodal(true)}
+                    > {pencil2} Düzenle</Button>
+                    
+        </Col>
         </>
       ),
     },
@@ -250,15 +281,19 @@ function Home() {
       progress: "Tamamlandı",
       buton:(
         <>
-          <Col xs={20} md={20} className="d-flex">
-                          <Button type="primary">ADD NEW CARD</Button>
+        <Col xs={20} md={20} className="d-flex">
+        
+        <Button type="primary">Bitir</Button>
                           <Button type="link" danger>
                           {deletebtn}DELETE
                         </Button>
-                        <Button type="link" className="darkbtn">
-                          {pencil2} EDIT
-                        </Button>
-                    </Col>
+        <Button
+                    type="link"
+                    className="darkbtn"
+                    onClick={() => setmodal(true)}
+                    > {pencil2} Düzenle</Button>
+                    
+        </Col>
         </>
       ),
       
@@ -271,19 +306,24 @@ function Home() {
       progress: "Tamamlandı",
       buton:(
         <>
-          <Col xs={20} md={20} className="d-flex">
-                          <Button type="primary">ADD NEW CARD</Button>
+        <Col xs={20} md={20} className="d-flex">
+        
+        <Button type="primary">Bitir</Button>
                           <Button type="link" danger>
                           {deletebtn}DELETE
                         </Button>
-                        <Button type="link" className="darkbtn">
-                          {pencil2} EDIT
-                        </Button>
-                    </Col>
+        <Button
+                    type="link"
+                    className="darkbtn"
+                    onClick={() => setmodal(true)}
+                    > {pencil2} Düzenle</Button>
+                    <ModalForm isOpen={modal} ></ModalForm>
+        </Col>
         </>
       ),
     },
   ];
+  
   const formProps = {
     name: "file",
     action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
@@ -300,6 +340,9 @@ function Home() {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
+  };
+  const toggleModal = () => {
+    setModalOpen(!modal);
   };
   const timelineList = [
     {
@@ -330,85 +373,11 @@ function Home() {
       color: "gray",
     },
   ];
-  const CustomInput = ({ value, onClick }) => (
-    <input
-      type="text"
-      value={value}
-      onClick={onClick}
-      placeholder="Tarih Seç"
-      style={{
-        padding: '10px',
-        fontSize: '16px',
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-      }}
-    />
-  );
   return (
     <>
       <div className="layout-content">
-        <Modal
-        size='lg'
-        isOpen={modal}
-        toggle={() => setmodal(!modal)}
-        >
-          <ModalHeader
-            toggle={() => setmodal(!modal)}
-          >
-            Popup
-          </ModalHeader>
-          <ModalBody>
-            <form>
-              <Row>
-                <Col lg={12}>
-                  <div>
-                    <label>
-                        Görev
-                    </label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Görev gir"
-                    >
-                    </input>
-                  </div>
-                </Col>
-                <Col lg={12}>
-                  <div>
-                    <label>
-                        Açıklama
-                    </label>
-                    <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Açıklama gir"
-                    >
-                    </input>
-                  </div>
-                </Col>
-                <Col lg={12}>
-                  <div>
-                    <label htmlFor="email">
-                        Email
-                    </label>
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleDateChange}
-                      dateFormat="dd/MM/yyyy"
-                      customInput={<CustomInput />}
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </form>
-            <button 
-                    type="dashed"
-                    className="btn mt-3 "
-                    style={ {backgroundColor: "#0b3629",color:"white"}}
-                    icon={<ToTopOutlined />} 
-                    >Submit</button>
-          </ModalBody>
-        </Modal>
+      <ModalForm isOpen={modal} ></ModalForm>
+      <ModalFormGörevEkle isOpen={modalOpen} closeModal={closeModal} ></ModalFormGörevEkle>
         <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={16} className="mb-24">
             <Card bordered={false} className="criclebox cardbody h-full">
@@ -458,15 +427,17 @@ function Home() {
                     ))}
                   </tbody>
                 </table>
-                <div className="pb-15 shadow-none">
-                <button 
+                <div className="uploadfile pb-15 shadow-none">
+                
+                  <Button
                     type="dashed"
-                    className="btn mt-3 ant-full-box"
-                    style={ {backgroundColor: "#0b3629",color:"white"}}
-                    icon={<ToTopOutlined />} 
-                    onClick={() => setmodal(true)}
-                    >Popup Aç</button>
-                </div>
+                    className="ant-full-box"
+                    icon={<ToTopOutlined />}
+                    onClick={() => setModalOpen(true)}
+                  >
+                    Görev Ekle
+                  </Button>
+              </div>
               </div>
             </Card>
           </Col>
