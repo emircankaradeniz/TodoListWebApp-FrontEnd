@@ -125,7 +125,7 @@ function Tables() {
       name: (
         <>
           <Avatar.Group>
-            <Avatar className="shape-avatar" src={ava1} size={25} alt="" />
+            <Avatar className="shape-avatar" src={ava5} size={25} alt="" />
             <div className="avatar-info">
               <Title level={5}>Spotify Version</Title>
             </div>
@@ -169,7 +169,7 @@ function Tables() {
       name: (
         <>
           <Avatar.Group>
-            <Avatar className="shape-avatar" src={ava2} size={25} alt="" />
+            <Avatar className="shape-avatar" src={ava5} size={25} alt="" />
             <div className="avatar-info">
               <Title level={5}>Progress Track</Title>
             </div>
@@ -212,7 +212,7 @@ function Tables() {
       name: (
         <>
           <Avatar.Group>
-            <Avatar className="shape-avatar" src={ava3} size={25} alt="" />
+            <Avatar className="shape-avatar" src={ava5} size={25} alt="" />
             <div className="avatar-info">
               <Title level={5}> Jira Platform Errors</Title>
             </div>
@@ -341,7 +341,7 @@ function Tables() {
       name: (
         <>
           <Avatar.Group>
-            <Avatar className="shape-avatar" src={ava6} size={25} alt="" />
+            <Avatar className="shape-avatar" src={ava5} size={25} alt="" />
             <div className="avatar-info">
               <Title level={5}>Redesign Online Store</Title>
             </div>

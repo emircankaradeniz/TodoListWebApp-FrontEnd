@@ -18,12 +18,6 @@ const ModalForm = ({ isOpen, toggle }) => {
           <Row>
             <Col lg={12}>
               <div>
-                <label>Görev</label>
-                <input type="text" className="form-control" placeholder="Görev gir" />
-              </div>
-            </Col>
-            <Col lg={12}>
-              <div>
                 <label>Açıklama</label>
                 <input type="text" className="form-control" placeholder="Açıklama gir" />
               </div>

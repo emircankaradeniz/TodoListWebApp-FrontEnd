@@ -184,7 +184,7 @@ function Home() {
   ];
   const list = [
     {
-      img: ava1,
+      img: ava5,
       Title: "Ders çalış",
       time : "05/03/2024 8:57",
       progress: "Tamamlandı",
@@ -206,7 +206,7 @@ function Home() {
       ),
     },
     {
-      img: ava2,
+      img: ava5,
       Title: "Kursa git",
       time : "05/03/2024 8:57",
       progress: "Tamamlammadı",
@@ -229,7 +229,7 @@ function Home() {
       ),
     },
     {
-      img: ava3,
+      img: ava5,
       Title: "staja başvur",
       time : "05/03/2024 8:57",
       progress: "Tamamlandı",
@@ -252,7 +252,7 @@ function Home() {
       ),
     },
     {
-      img: ava4,
+      img: ava5,
       Title: "spora git",
       time : "05/03/2024 8:57",
       progress: "Tamamlanmadı",
@@ -300,7 +300,7 @@ function Home() {
     },
 
     {
-      img: ava6,
+      img: ava5,
       Title: "okula git",
       time : "05/03/2024 8:57",
       progress: "Tamamlandı",
