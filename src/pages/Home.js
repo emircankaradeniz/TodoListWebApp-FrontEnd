@@ -1,6 +1,10 @@
-import { useState } from "react";
-import React from 'react';
+import { useState,useEffect } from "react";
+import React,{Component} from 'react';
+import ReactDOM from 'react-dom';
+import GorevDataService from "../services/gorevService";
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link } from "react-router-dom";
+import Btn from "../components/btn/openDelEditBtn"
 import {
   Card,
   Col,
@@ -23,29 +27,73 @@ import Paragraph from "antd/lib/typography/Paragraph";
 import ModalForm from "../components/PopUp/ModalForm";
 import ModalFormGörevEkle from "../components/PopUp/ModalFormGörevEkle";
 import Echart from "../components/chart/EChart";
-import ava1 from "../assets/images/logo-shopify.svg";
-import ava2 from "../assets/images/logo-atlassian.svg";
-import ava3 from "../assets/images/logo-slack.svg";
-import ava4 from "../assets/images/logo-spotify.svg";
 import ava5 from "../assets/images/logo-jira.svg";
-import ava6 from "../assets/images/logo-invision.svg";
-import card from "../assets/images/info-card-1.jpg";
+export default class HomeClass extends Component{
+  constructor(props){
+    super(props);
+    this.retrieveGorev=this.retrieveGorev.bind(true);
+    this.refreshList=this.refreshList.bind(true);
+    this.setActiveGorev=this.setActiveGorev.bind(true);
+    this.radioRef = React.createRef();
+    this.handleChangeCheckBox = this.handleChangeCheckBox.bind(this);
+    this.state={
+      gorevList:[],
+      currentGorev:null,
+      currentIndex:-1,
+      clicked:false,
+      checked: false
+    };
+  }
+  handleChangeCheckBox() {
+    this.setState({checked : !this.state.checked});
+  }
+  handleClick=()=>{
+    this.setState(prevState => ({
+      clicked: !prevState.clicked
+    }));
+  }
+  componentDidMount(){
+    this.retrieveGorev();
+  }
+  retrieveGorev(){
+    GorevDataService.getAll().then(response =>{
+      this.setState({
+        gorevList:response.data
+      });
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+  refreshList(){
+    this.retrieveGorev();
+    this.setState({
+      currentGorev:null,
+      currentIndex:-1
+    });
+  }
+  setActiveGorev(gorev,index){
+    this.setState({
+      currentGorev:gorev,
+      currentIndex:index
+    });
+  }
+  newGorev(){
+    this.setState({
+      id: null,
+      title:"",
+      description: "",
+      published:false,
 
-function Home() {
-  const { Title, Text } = Typography;
-  const onChange = (e) => console.log(`radio checked:${e.target.value}`);
-  const [inputValue, setInputValue] = useState('');
-  const [modal,setmodal]=useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  function closeModal()  {
-    setModalOpen(false);
+      submitted: false
+        
+    });
   };
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const dollor = [
+  render(){
+    const {clicked}=this.state;
+    const { Title, Text } = Typography;
+    const onChange = (e) => console.log(`radio checked:${e.target.value}`);
+    const dollor = [
     <svg
       width="22"
       height="22"
@@ -190,17 +238,10 @@ function Home() {
       progress: "Tamamlandı",
       buton:(
         <>
-        <Col xs={20} md={20} className="d-flex">
-        
-        <Button type="primary">Bitir</Button>
-                          <Button type="link" danger>
-                          {deletebtn}DELETE
-                        </Button>
-        <Button
-                    type="link"
-                    className="darkbtn"
-                    onClick={() => setmodal(true)}
-                    > {pencil2} Düzenle</Button>
+          <Col xs={20} md={20} className="d-flex">
+          <Btn
+            onEdit={this.handleClick}
+          ></Btn>
         </Col>
         </>
       ),
@@ -213,17 +254,9 @@ function Home() {
       buton:(
         <>
         <Col xs={20} md={20} className="d-flex">
-        
-        <Button type="primary">Bitir</Button>
-                          <Button type="link" danger>
-                          {deletebtn}DELETE
-                        </Button>
-        <Button
-                    type="link"
-                    className="darkbtn"
-                    onClick={() => setmodal(true)}
-                    > {pencil2} Düzenle</Button>
-                    
+          <Btn
+            onEdit={this.handleClick}
+          ></Btn>
         </Col>
         </>
       ),
@@ -236,17 +269,9 @@ function Home() {
       buton:(
         <>
         <Col xs={20} md={20} className="d-flex">
-        
-        <Button type="primary">Bitir</Button>
-                          <Button type="link" danger>
-                          {deletebtn}DELETE
-                        </Button>
-        <Button
-                    type="link"
-                    className="darkbtn"
-                    onClick={() => setmodal(true)}
-                    > {pencil2} Düzenle</Button>
-                    
+          <Btn
+            onEdit={this.handleClick}
+          ></Btn>
         </Col>
         </>
       ),
@@ -259,17 +284,9 @@ function Home() {
       buton:(
         <>
         <Col xs={20} md={20} className="d-flex">
-        
-        <Button type="primary">Bitir</Button>
-                          <Button type="link" danger>
-                          {deletebtn}DELETE
-                        </Button>
-        <Button
-                    type="link"
-                    className="darkbtn"
-                    onClick={() => setmodal(true)}
-                    > {pencil2} Düzenle</Button>
-                    
+          <Btn
+            onEdit={this.handleClick}
+          ></Btn>
         </Col>
         </>
       ),
@@ -282,17 +299,9 @@ function Home() {
       buton:(
         <>
         <Col xs={20} md={20} className="d-flex">
-        
-        <Button type="primary">Bitir</Button>
-                          <Button type="link" danger>
-                          {deletebtn}DELETE
-                        </Button>
-        <Button
-                    type="link"
-                    className="darkbtn"
-                    onClick={() => setmodal(true)}
-                    > {pencil2} Düzenle</Button>
-                    
+          <Btn
+            onEdit={this.handleClick}
+          ></Btn>
         </Col>
         </>
       ),
@@ -307,23 +316,15 @@ function Home() {
       buton:(
         <>
         <Col xs={20} md={20} className="d-flex">
-        
-        <Button type="primary">Bitir</Button>
-                          <Button type="link" danger>
-                          {deletebtn}DELETE
-                        </Button>
-        <Button
-                    type="link"
-                    className="darkbtn"
-                    onClick={() => setmodal(true)}
-                    > {pencil2} Düzenle</Button>
-                    <ModalForm isOpen={modal} ></ModalForm>
+          <Btn
+            onEdit={this.handleClick}
+          ></Btn>
         </Col>
         </>
       ),
     },
   ];
-  
+
   const formProps = {
     name: "file",
     action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
@@ -338,11 +339,9 @@ function Home() {
         message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
+
       }
     },
-  };
-  const toggleModal = () => {
-    setModalOpen(!modal);
   };
   const timelineList = [
     {
@@ -373,11 +372,9 @@ function Home() {
       color: "gray",
     },
   ];
-  return (
-    <>
-      <div className="layout-content">
-      <ModalForm isOpen={modal} ></ModalForm>
-      <ModalFormGörevEkle isOpen={modalOpen} closeModal={closeModal} ></ModalFormGörevEkle>
+    return(
+      <>
+        <div className="layout-content">
         <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={16} className="mb-24">
             <Card bordered={false} className="criclebox cardbody h-full">
@@ -433,7 +430,7 @@ function Home() {
                     type="dashed"
                     className="ant-full-box"
                     icon={<ToTopOutlined />}
-                    onClick={() => setModalOpen(true)}
+                    onClick={this.handleClick}
                   >
                     Görev Ekle
                   </Button>
@@ -441,8 +438,50 @@ function Home() {
               </div>
             </Card>
           </Col>
-          
           <Col xs={24} sm={24} md={12} lg={12} xl={8} className="mb-24">
+          {clicked && 
+                  <Card>
+                    <div>
+                    <form className="mt-4">
+                      <Row>
+                        <Col md={12}>
+                          <label style={{ marginRight: '20px' }}>Görev adı :</label>
+                          <input />
+                        </Col>
+                        <Col md={12}>
+                          <label style={{ marginRight: '20px' }} >Açıklama :</label>
+                          <input />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={12}>
+                          <label style={{ marginRight: '50px' , marginTop:'20px'}}>Tarih :</label>
+                          <input />
+                        </Col>
+                        <Col md={12}>
+                          <label style={{ marginRight: '50px', marginTop:'20px' }} >Saat :</label>
+                          <input />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <label style={{ marginRight: '20px' , marginTop:'20px' }} >Öncelikli olsun</label>
+                          <input 
+                            type="checkbox"
+                            checked={this.state.checked}
+                            onChange={this.handleChangeCheckBox}
+                          ></input>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={12}>
+                          <button onClick={this}></button>
+                        </Col>
+                      </Row>
+                    </form>
+                  </div>
+                  </Card>
+                  }
             <Card bordered={false} className="criclebox h-full">
               <div className="timeline-box">
                 <Title level={5} >Yaklaşan Görevler</Title>
@@ -468,74 +507,9 @@ function Home() {
             </Card>
           </Col>
         </Row>            
-        <Row gutter={[24, 0]}>
-          <Col xs={24} md={12} sm={24} lg={12} xl={14} className="mb-24">
-            <Card bordered={false} className="criclebox h-full">
-              <Row gutter>
-                <Col
-                  xs={24}
-                  md={12}
-                  sm={24}
-                  lg={12}
-                  xl={14}
-                  className="mobile-24"
-                >
-                  <div className="h-full col-content p-20">
-                    <div className="ant-muse">
-                      <Text>Built by developers</Text>
-                      <Title level={5}>Muse Dashboard for Ant Design</Title>
-                      <Paragraph className="lastweek mb-36">
-                        From colors, cards, typography to complex elements, you
-                        will find the full documentation.
-                      </Paragraph>
-                    </div>
-                    <div className="card-footer">
-                      <a className="icon-move-right" href="#pablo">
-                        Read More
-                        {<RightOutlined />}
-                      </a>
-                    </div>
-                  </div>
-                </Col>
-                <Col
-                  xs={24}
-                  md={12}
-                  sm={24}
-                  lg={12}
-                  xl={10}
-                  className="col-img"
-                >
-                  <div className="ant-cret text-right">
-                    <img src={card} alt="" className="border10" />
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-
-          <Col xs={24} md={12} sm={24} lg={12} xl={10} className="mb-24">
-            <Card bordered={false} className="criclebox card-info-2 h-full">
-              <div className="gradent h-full col-content">
-                <div className="card-content">
-                  <Title level={5}>Work with the best</Title>
-                  <p>
-                    Wealth creation is an evolutionarily recent positive-sum
-                    game. It is all about who take the opportunity first.
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <a className="icon-move-right" href="#pablo">
-                    Read More
-                    <RightOutlined />
-                  </a>
-                </div>
-              </div>
-            </Card>
-          </Col>
-        </Row>
       </div>
-    </>
-  );
+      </>
+    )
+  
 }
-
-export default Home;
+}
