@@ -36,12 +36,26 @@ export default class HomeClass extends Component{
     this.setActiveGorev=this.setActiveGorev.bind(true);
     this.radioRef = React.createRef();
     this.handleChangeCheckBox = this.handleChangeCheckBox.bind(this);
+    this.onChangeGorevAdi=this.onChangeGorevAdi.bind(this);
+    this.onChangeAciklama=this.onChangeAciklama.bind(this);
+    this.onChangeTarih=this.onChangeTarih.bind(this);
+    this.onChangeSaat=this.onChangeSaat.bind(this);
+    this.saveGorev = this.saveGorev.bind(this);
+    this.newGorev=this.newGorev.bind(this);
     this.state={
       gorevList:[],
       currentGorev:null,
       currentIndex:-1,
       clicked:false,
-      checked: false
+      checked: false,
+      id:null,
+      user_id:1,
+      gorevAdi:"",
+      aciklama:"",
+      tarih:"",
+      saat:"",
+
+      submitted:false
     };
   }
   handleChangeCheckBox() {
@@ -78,12 +92,59 @@ export default class HomeClass extends Component{
       currentIndex:index
     });
   }
+  onChangeGorevAdi(e){
+    this.setState({
+      gorevAdi:e.target.value
+    });
+  }
+  onChangeAciklama(e){
+    this.setState({
+      aciklama:e.target.value
+    });
+  }
+  onChangeTarih(e){
+    this.setState({
+      tarih:e.target.value
+    });
+  }
+  onChangeSaat(e){
+    this.setState({
+      saat:e.target.value
+    });
+  }
+  saveGorev(){
+    var data = {
+      gorevAdi: this.state.gorevAdi,
+      aciklama: this.state.aciklama,
+      tarih: this.state.tarih,
+      saat: this.state.saat,
+    };
+    GorevDataService.create(data)
+      .then(response => {
+        this.setState({
+          id:response.data.id,
+          gorevAdi:response.data.gorevAdi,
+          aciklama:response.data.aciklama,
+          tarih:response.data.tarih,
+          saat:response.data.saat,
+
+          submitted :true
+        });
+        console.log(response.data);
+      }).catch(e => {
+        console.log(e);
+      });
+
+    
+  }
   newGorev(){
     this.setState({
       id: null,
-      title:"",
-      description: "",
-      published:false,
+      gorevAdi:"",
+      aciklama:"",
+      tarih:"",
+      saat:"",
+      oncelik:false,
 
       submitted: false
         
@@ -440,47 +501,75 @@ export default class HomeClass extends Component{
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8} className="mb-24">
           {clicked && 
-                  <Card>
+            <div>
+              {this.state.submitted ? (
+                <p>you submitted successfully!</p>
+              ) : (
+                <Card>
                     <div>
                     <form className="mt-4">
                       <Row>
                         <Col md={12}>
-                          <label style={{ marginRight: '20px' }}>Görev adı :</label>
-                          <input />
+                          <label htmlFor="gorevAdi" style={{ marginRight: '20px' }}>Görev adı :</label>
+                          <input 
+                            type="text"
+                            className="form-control"
+                            id="gorevAdi"
+                            required
+                            value={this.state.gorevAdi}
+                            onChange={this.onChangeGorevAdi}
+                            name="gorevAdi"
+                          />
                         </Col>
                         <Col md={12}>
-                          <label style={{ marginRight: '20px' }} >Açıklama :</label>
-                          <input />
+                          <label htmlFor="aciklama" style={{ marginRight: '20px' }} >Açıklama :</label>
+                          <input 
+                            type="text"
+                            className="form-control"
+                            id="aciklama"
+                            required
+                            value={this.state.aciklama}
+                            onChange={this.onChangeAciklama}
+                            name="aciklama"
+                          />
                         </Col>
                       </Row>
                       <Row>
                         <Col md={12}>
-                          <label style={{ marginRight: '50px' , marginTop:'20px'}}>Tarih :</label>
-                          <input />
+                          <label htmlFor="tarih" style={{ marginRight: '50px' , marginTop:'20px'}}>Tarih :</label>
+                          <input 
+                            type="text"
+                            className="form-control"
+                            id="tarih"
+                            required
+                            value={this.state.tarih}
+                            onChange={this.onChangeTarih}
+                            name="tarih"
+                          />
                         </Col>
                         <Col md={12}>
                           <label style={{ marginRight: '50px', marginTop:'20px' }} >Saat :</label>
-                          <input />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <label style={{ marginRight: '20px' , marginTop:'20px' }} >Öncelikli olsun</label>
                           <input 
-                            type="checkbox"
-                            checked={this.state.checked}
-                            onChange={this.handleChangeCheckBox}
-                          ></input>
+                            type="text"
+                            className="form-control"
+                            id="saat"
+                            required
+                            value={this.state.saat}
+                            onChange={this.onChangeSaat}
+                            name="saat"
+                          />
                         </Col>
                       </Row>
                       <Row>
                         <Col md={12}>
-                          <button onClick={this}></button>
+                          <button onClick={this.saveGorev} className="btn btn-success"></button>
                         </Col>
                       </Row>
                     </form>
                   </div>
                   </Card>
+              )}
+            </div>
                   }
             <Card bordered={false} className="criclebox h-full">
               <div className="timeline-box">
