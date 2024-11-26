@@ -1,33 +1,18 @@
-import http from "../http-common";
+import axios from "axios";
 
-class GorevDataService {
-  getAll() {
-    return http.get("/tasks");
-  }
+const API_URL = "http://localhost:8080/api/gorevler";
 
-  get(id) {
-    return http.get(`/tasks/${id}`);
-  }
+const getAll = () => {
+  return axios.get(API_URL);
+};
 
-  create(data) {
-    return http.post("/tasks", data);
-  }
+const create = (data) => {
+  return axios.post(API_URL, data); // POST isteği
+};
 
-  update(id, data) {
-    return http.put(`/tasks/${id}`, data);
-  }
+const GorevDataService = {
+  getAll,
+  create, // `create` metodunu burada tanımladığınızdan emin olun
+};
 
-  delete(id) {
-    return http.delete(`/tasks/${id}`);
-  }
-
-  deleteAll() {
-    return http.delete(`/tasks`);
-  }
-
-  findByTitle(title) {
-    return http.get(`/tasks?title=${title}`);
-  }
-}
-
-export default new GorevDataService();
+export default GorevDataService;
