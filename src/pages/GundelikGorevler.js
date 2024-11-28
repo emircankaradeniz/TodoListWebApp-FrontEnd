@@ -5,19 +5,25 @@ import {
   Col,
   Card,
   Typography,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Table,
 } from "antd";
 
+const { Title } = Typography;
+
 function GundelikGorevler() {
-  const { Title } = Typography;
   const [gorevler, setGorevler] = useState([]);
   const [formData, setFormData] = useState({
     gorevAdi: "",
-    aciklama: "",
-    tarih: "",
     saat: "",
+    aciklama: "",
   });
+  const [selectedGorev, setSelectedGorev] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // Görevleri çekmek için useEffect
   useEffect(() => {
     fetchGorevler();
   }, []);
@@ -32,30 +38,102 @@ function GundelikGorevler() {
       });
   };
 
-  // Form inputlarını takip etme
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Görev ekleme işlemi
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleAdd = () => {
     GorevDataService.create(formData)
       .then((response) => {
-        console.log("Görev eklendi:", response.data);
         setGorevler((prevGorevler) => [...prevGorevler, response.data]);
         setFormData({
           gorevAdi: "",
-          aciklama: "",
-          tarih: "",
           saat: "",
+          aciklama: "",
         });
       })
       .catch((error) => {
         console.error("Görev eklenirken hata oluştu:", error);
       });
   };
+
+  const handleDelete = (id) => {
+    GorevDataService.delete(id)
+      .then(() => {
+        setGorevler((prevGorevler) => prevGorevler.filter((gorev) => gorev.id !== id));
+      })
+      .catch((error) => {
+        console.error("Görev silinirken hata oluştu:", error);
+      });
+  };
+
+  const handleComplete = (id) => {
+    GorevDataService.complete(id)
+      .then(() => {
+        setGorevler((prevGorevler) =>
+          prevGorevler.map((gorev) =>
+            gorev.id === id ? { ...gorev, tamamlandi: true } : gorev
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Görev tamamlanırken hata oluştu:", error);
+      });
+  };
+
+  const handleShowDescription = (gorev) => {
+    setSelectedGorev(gorev);
+    setIsModalVisible(true);
+  };
+
+  const handleUpdateDescription = () => {
+    GorevDataService.update(selectedGorev.id, selectedGorev)
+      .then(() => {
+        setGorevler((prevGorevler) =>
+          prevGorevler.map((gorev) =>
+            gorev.id === selectedGorev.id ? selectedGorev : gorev
+          )
+        );
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        console.error("Açıklama güncellenirken hata oluştu:", error);
+      });
+  };
+
+  const columns = [
+    {
+      title: "Görev Adı",
+      dataIndex: "gorevAdi",
+      key: "gorevAdi",
+    },
+    {
+      title: "Saat",
+      dataIndex: "saat",
+      key: "saat",
+    },
+    {
+      title: "Tamamlandı",
+      dataIndex: "tamamlandi",
+      key: "tamamlandi",
+      render: (tamamlandi) => (tamamlandi ? "✅" : "❌"),
+    },
+    {
+      title: "Açıklama",
+      key: "aciklama",
+      render: (_, gorev) => (
+        <Button onClick={() => handleShowDescription(gorev)}>Göster</Button>
+      ),
+    },
+    {
+      title: "İşlemler",
+      key: "actions",
+      render: (_, gorev) => (
+        <>
+          <Button onClick={() => handleComplete(gorev.id)}>Bitir</Button>
+          <Button danger onClick={() => handleDelete(gorev.id)}>
+            Sil
+          </Button>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="tabled">
@@ -66,94 +144,77 @@ function GundelikGorevler() {
             className="criclebox tablespace mb-24"
             title="Gündelik Görevler"
           >
-            <div className="ant-list-box table-responsive">
-              {/* Görev ekleme formu */}
-              <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-                <Row gutter={[16, 16]}>
-                  <Col span={6}>
-                    <input
-                      type="text"
-                      name="gorevAdi"
-                      placeholder="Görev Adı"
-                      value={formData.gorevAdi}
-                      onChange={handleChange}
-                      required
-                      style={{ width: "100%", padding: "8px" }}
-                    />
-                  </Col>
-                  <Col span={6}>
-                    <input
-                      type="text"
-                      name="aciklama"
-                      placeholder="Açıklama"
-                      value={formData.aciklama}
-                      onChange={handleChange}
-                      style={{ width: "100%", padding: "8px" }}
-                    />
-                  </Col>
-                  <Col span={6}>
-                    <input
-                      type="date"
-                      name="tarih"
-                      value={formData.tarih}
-                      onChange={handleChange}
-                      required
-                      style={{ width: "100%", padding: "8px" }}
-                    />
-                  </Col>
-                  <Col span={4}>
-                    <input
-                      type="time"
-                      name="saat"
-                      value={formData.saat}
-                      onChange={handleChange}
-                      required
-                      style={{ width: "100%", padding: "8px" }}
-                    />
-                  </Col>
-                  <Col span={2}>
-                    <button
-                      type="submit"
-                      style={{
-                        backgroundColor: "#1890ff",
-                        color: "white",
-                        padding: "8px 16px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Ekle
-                    </button>
-                  </Col>
-                </Row>
-              </form>
+            <Form
+              layout="inline"
+              onFinish={handleAdd}
+              style={{ marginBottom: "20px" }}
+            >
+              <Form.Item label="Görev Adı">
+                <Input
+                  value={formData.gorevAdi}
+                  onChange={(e) =>
+                    setFormData({ ...formData, gorevAdi: e.target.value })
+                  }
+                  required
+                />
+              </Form.Item>
+              <Form.Item label="Saat">
+                <Input
+                  type="time"
+                  value={formData.saat}
+                  onChange={(e) =>
+                    setFormData({ ...formData, saat: e.target.value })
+                  }
+                  required
+                />
+              </Form.Item>
+              <Form.Item label="Açıklama">
+                <Input.TextArea
+                  rows={1}
+                  value={formData.aciklama}
+                  onChange={(e) =>
+                    setFormData({ ...formData, aciklama: e.target.value })
+                  }
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Ekle
+                </Button>
+              </Form.Item>
+            </Form>
 
-              {/* Görevler tablosu */}
-              <table className="width-100">
-                <thead>
-                  <tr>
-                    <th>GÖREV ADI</th>
-                    <th>AÇIKLAMA</th>
-                    <th>TARİH</th>
-                    <th>SAAT</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {gorevler.map((gorev) => (
-                    <tr key={gorev.id}>
-                      <td>{gorev.gorevAdi}</td>
-                      <td>{gorev.aciklama}</td>
-                      <td>{gorev.tarih}</td>
-                      <td>{gorev.saat}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table
+              dataSource={gorevler}
+              columns={columns}
+              rowKey="id"
+              pagination={{ pageSize: 5 }}
+            />
           </Card>
         </Col>
       </Row>
+
+      {/* Açıklama Gösterme Modalı */}
+      {selectedGorev && (
+        <Modal
+          title="Görev Açıklaması"
+          visible={isModalVisible}
+          onOk={handleUpdateDescription}
+          onCancel={() => setIsModalVisible(false)}
+        >
+          <Form layout="vertical">
+            <Form.Item label="Açıklama">
+              <Input.TextArea
+                value={selectedGorev.aciklama}
+                onChange={(e) =>
+                  setSelectedGorev({ ...selectedGorev, aciklama: e.target.value })
+                }
+                rows={5}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+      )}
     </div>
   );
 }

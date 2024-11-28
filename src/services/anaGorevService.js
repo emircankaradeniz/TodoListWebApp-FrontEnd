@@ -12,15 +12,16 @@ class AnaGorevService {
   }
 
   update(id, data) {
-    return axios.put(`${API_URL}/${id}`, data); // PUT isteği
+    return axios.put(`${API_URL}/${id}`, data);
   }
 
   delete(id) {
     return axios.delete(`${API_URL}/${id}`);
   }
+
   complete(id) {
-    return axios.put(`http://localhost:8080/api/ana-gorevler/tamamla/${id}`);
-  }  
+    return axios.put(`${API_URL}/tamamla/${id}`);
+  }
 }
 
 export default new AnaGorevService();
