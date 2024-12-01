@@ -14,13 +14,21 @@ const EChart = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/ana-gorevler/tamamlanan-gorevler-aylik");
+      const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+      const response = await axios.get(
+        "http://localhost:8080/api/ana-gorevler/tamamlanan-gorevler-aylik",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = response.data;
-
+  
       // Verileri sıralayıp formatla
       const sortedKeys = Object.keys(data).sort(); // Tarihe göre sıralama
       const values = sortedKeys.map((key) => data[key]);
-
+  
       setChartData({
         labels: sortedKeys,
         values,
@@ -29,6 +37,7 @@ const EChart = () => {
       console.error("Grafik verisi alınırken hata oluştu:", error);
     }
   };
+  
 
   const options = {
     title: {

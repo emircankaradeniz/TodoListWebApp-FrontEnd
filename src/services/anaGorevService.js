@@ -4,23 +4,48 @@ const API_URL = "http://localhost:8080/api/ana-gorevler";
 
 class AnaGorevService {
   getAll() {
-    return axios.get(API_URL);
+    const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+    return axios.get(API_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   create(data) {
-    return axios.post(API_URL, data);
+    const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+    return axios.post(API_URL, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   update(id, data) {
-    return axios.put(`${API_URL}/${id}`, data);
+    const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+    return axios.put(`${API_URL}/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   delete(id) {
-    return axios.delete(`${API_URL}/${id}`);
+    const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+    return axios.delete(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   complete(id) {
-    return axios.put(`${API_URL}/tamamla/${id}`);
+    const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+    return axios.put(`${API_URL}/tamamla/${id}`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 }
 

@@ -3,28 +3,58 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/api/gorevler";
 
 const getAll = () => {
-  return axios.get(API_URL);
+  const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+  return axios.get(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 const create = (data) => {
-  return axios.post(API_URL, data);
+  const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+  return axios.post(API_URL, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 const deleteGorev = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
+  const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+  return axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 const complete = (id) => {
-  return axios.put(`${API_URL}/${id}/tamamla`); // PUT isteği
+  const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+  return axios.put(`${API_URL}/${id}/tamamla`, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 const updateDescription = (id, description) => {
+  const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
   return axios.put(`${API_URL}/${id}/aciklama`, description, {
-    headers: { "Content-Type": "text/plain" },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "text/plain",
+    },
   });
 };
+
 const update = (id, data) => {
-  return axios.put(`${API_URL}/${id}`, data); // Backend'deki PUT endpoint'ine istek gönder
+  const token = localStorage.getItem("token"); // Token'ı localStorage'dan al
+  return axios.put(`${API_URL}/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 const GorevDataService = {
