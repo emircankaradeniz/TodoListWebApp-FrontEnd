@@ -15,7 +15,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import UserService from "../services/UserService";
 import BgProfile from "../assets/images/bg-profile.jpg";
-import profilavatar from "../assets/images/face-1.jpg";
+import profilavatar from "../assets/images/blank-profile-picture.png";
 
 function Profile() {
   const [profileInfo, setProfileInfo] = useState({});
@@ -28,36 +28,40 @@ function Profile() {
 
   const fetchProfileInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await UserService.getYourProfile(token);
-      setProfileInfo(response.ourUsers);
+        const token = localStorage.getItem("token");
+        const response = await UserService.getYourProfile(token);
+        setProfileInfo(response.ourUsers); // Profil bilgilerini state'e kaydediyoruz
     } catch (error) {
-      console.error("Error fetching profile information:", error);
-      message.error("Failed to fetch profile information.");
-    }
-  };
-
-  const handleUpdate = async (values) => {
-    try {
-        const userId = profileInfo.id; // Kullanıcının ID'sini alın
-        await UserService.updateUser(userId, values); // Backend’e istekte bulunun
-        message.success("Profile updated successfully!");
-        fetchProfileInfo(); // Profili yeniden yükleyin
-    } catch (error) {
-        console.error("Error updating profile:", error);
-        message.error("Failed to update profile.");
+        console.error("Error fetching profile information:", error);
+        message.error("Failed to fetch profile information.");
     }
 };
 
-  const handleAvatarChange = (file) => {
-    // Simulate an avatar change
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setProfileInfo({ ...profileInfo, avatar: e.target.result });
-    };
-    reader.readAsDataURL(file);
-    return false; // Prevent default upload
+
+  const handleUpdate = async (values) => {
+    try {
+        const token = localStorage.getItem("token"); // Token'ı al
+        const userId = profileInfo.id; // Kullanıcı ID'si
+        await UserService.updateUser(userId, values, token); // Backend'e istekte bulun
+        message.success("Profile updated successfully!"); // Başarı mesajı
+        fetchProfileInfo(); // Profili yeniden yükle
+    } catch (error) {
+        console.error("Error updating profile:", error); // Hata log'u
+        message.error("Failed to update profile."); // Kullanıcıya hata mesajı
+    }
+};
+
+
+const handleAvatarChange = (file) => {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+      form.setFieldsValue({ avatar: e.target.result.split(",")[1] }); // Base64 string
   };
+  reader.readAsDataURL(file);
+  return false; // Dosyanın otomatik yüklenmesini engelle
+};
+
+
 
   return (
     <>
@@ -73,7 +77,16 @@ function Profile() {
           <Row justify="space-between" align="middle" gutter={[24, 0]}>
             <Col span={24} md={12} className="col-info">
               <Avatar.Group>
-                <Avatar size={74} shape="square" src={profilavatar} />
+              <Avatar
+                    size={74}
+                    shape="square"
+                    src={
+                        profileInfo.avatarBase64
+                            ? `data:image/jpeg;base64,${profileInfo.avatarBase64}`
+                            : profilavatar // Eğer avatar yoksa varsayılan görsel gösterilir
+                    }
+                />
+
                 <div className="avatar-info">
                   <h4 className="font-semibold m-0">
                     {profileInfo.name || "User Name"}
@@ -105,14 +118,9 @@ function Profile() {
             bordered={false}
             title={<h6 className="font-semibold m-0">Profile Information</h6>}
             className="header-solid h-full card-profile-information"
-            extra={
-              <Button type="link" onClick={() => setIsModalVisible(true)}>
-                Edit
-              </Button>
-            }
             bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
           >
-            <Descriptions title={profileInfo.name || "User Name"}>
+            <Descriptions>
               <Descriptions.Item label="Full Name" span={3}>
                 {profileInfo.name || "N/A"}
               </Descriptions.Item>
@@ -156,15 +164,12 @@ function Profile() {
               <Form.Item name="city" label="City" rules={[{ required: true, message: 'Please enter your city' }]}>
                   <Input />
               </Form.Item>
-              <Form.Item label="Avatar" name="avatar" valuePropName="file">
-                  <Upload
-                      beforeUpload={() => false} // Dosyanın otomatik yüklenmesini engeller
-                      listType="picture"
-                      maxCount={1}
-                  >
-                      <Button>Select Avatar</Button>
+              <Form.Item name="avatar" label="Avatar">
+                  <Upload beforeUpload={handleAvatarChange} listType="picture" maxCount={1}>
+                      <Button>Upload Avatar</Button>
                   </Upload>
               </Form.Item>
+
           </Form>
       </Modal>
 

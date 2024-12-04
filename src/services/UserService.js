@@ -70,19 +70,21 @@ class UserService {
     static async updateUser(userId, updatedUser, token) {
         try {
             const response = await axios.put(
-                `http://localhost:8080/api/profile/update/${userId}`,
+                `${UserService.BASE_URL}/api/profile/update/${userId}`,
                 updatedUser,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Doğru bir token kullanıldığından emin olun
+                        Authorization: `Bearer ${token}`, // Token'ı header'a ekliyoruz
                     },
                 }
             );
             return response.data;
         } catch (err) {
+            console.error("Error in updateUser:", err);
             throw err;
         }
     }
+    
     
 
     /** AUTHENTICATION CHECKER */

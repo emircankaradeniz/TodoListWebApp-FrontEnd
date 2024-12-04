@@ -13,12 +13,14 @@ import {
   message,
 } from "antd";
 import UserService from "../services/UserService";
-import signinbg from "../assets/images/img-signin.jpg";
+import signinbg from "../assets/images/signin_photo.png";
 import {
   DribbbleOutlined,
   TwitterOutlined,
   InstagramOutlined,
   GithubOutlined,
+  LinkedinOutlined,
+  FacebookOutlined,
 } from "@ant-design/icons";
 
 const { Title } = Typography;
@@ -150,21 +152,20 @@ export default class SignIn extends Component {
             </Menu>
             <Menu mode="horizontal" className="menu-nav-social">
               <Menu.Item>
-                <Link to="#">{<DribbbleOutlined />}</Link>
+                <a href="https://www.facebook.com/emircan.karadeniz.35?locale=tr_TR" target="_blank">{<FacebookOutlined />}</a>
               </Menu.Item>
               <Menu.Item>
-                <Link to="#">{<TwitterOutlined />}</Link>
+                <a href="https://www.linkedin.com/in/emircankaradeniz/" target="_blank">{<LinkedinOutlined />}</a>
               </Menu.Item>
               <Menu.Item>
-                <Link to="#">{<InstagramOutlined />}</Link>
+                <a href="https://www.instagram.com/emircan_krdnz/" target="_blank">{<InstagramOutlined />}</a>
               </Menu.Item>
               <Menu.Item>
-                <Link to="#">{<GithubOutlined />}</Link>
+                <a href="https://github.com/emircankaradeniz" target="_blank">{<GithubOutlined />}</a>
               </Menu.Item>
             </Menu>
             <p className="copyright">
-              {" "}
-              Copyright © 2021 Muse by <a href="#pablo">Creative Tim</a>.{" "}
+              Copyright © 2024 Muse by <a href="https://www.linkedin.com/in/emircankaradeniz/">Emircan KARADENİZ</a>.
             </p>
           </Footer>
         </Layout>
