@@ -35,7 +35,7 @@ export default class SignUp extends Component {
         const token = localStorage.getItem("token");
         await UserService.register(values, token);
         message.success("User registered successfully!");
-        this.props.history.push("/admin/user-management");
+        this.props.history.push("/sign-in");
       } catch (error) {
         console.error("Error registering user:", error);
         message.error("An error occurred while registering user.");

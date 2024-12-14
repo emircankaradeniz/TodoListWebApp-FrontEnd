@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import AnaGorevService from "../services/anaGorevService";
-import { Table, Button, Modal, Input, Form, Typography, Progress, Card, Timeline, Row, Col } from "antd";
+import { Table, Button, Modal, Input, Form, Typography, Progress, Card, Timeline, Row, Col ,List} from "antd";
 import { format } from "date-fns";
 import EChart from "../components/chart/EChart";
+import ScrapeDataService from "../services/ScrapeDataService";
 const { Title, Text, Paragraph } = Typography;
+
 
 class AnaGorevler extends Component {
   constructor(props) {
@@ -18,6 +20,10 @@ class AnaGorevler extends Component {
         tamamlandi: false,
       },
       timelineList: [],
+      searchQuery: "", // Arama kutusundaki metin
+      searchResults: [], // Ürün arama sonuçları
+      searchModalVisible: false, // Arama modalının açık/kapalı durumu
+      chartKey: 0,
     };
   }
 
@@ -57,6 +63,40 @@ class AnaGorevler extends Component {
 
     this.setState({ timelineList: formattedTasks });
   };
+  
+  handleSearchProducts = async (gorevAdi) => {
+    
+    try {
+      const response = await ScrapeDataService.searchAmazon(gorevAdi);
+  
+      if (response && Array.isArray(response.data)) {
+        // Gelen veri bir dizi ise
+        this.setState({
+          searchResults: response.data.slice(0, 5), // İlk 5 sonucu al
+          searchModalVisible: true, // Modalı aç
+        });
+      } else {
+        Modal.error({
+          title: "Hata",
+          content: "Ürün arama sonucu beklenen formatta değil.",
+        });
+      }
+    } catch (error) {
+      console.error("Ürün arama hatası:", error);
+      Modal.error({
+        title: "Hata",
+        content: "Ürün araması sırasında bir hata oluştu.",
+      });
+    } finally {
+
+    }
+  };
+  refreshChart = () => {
+    // Grafiği yenilemek için key'i artır
+    this.setState((prevState) => ({
+      chartKey: prevState.chartKey + 1,
+    }));
+  };
 
   handleAddOrEdit = () => {
     const { currentGorev, formData } = this.state;
@@ -77,6 +117,7 @@ class AnaGorevler extends Component {
   handleDelete = (id) => {
     AnaGorevService.delete(id).then(() => {
       this.retrieveGorevler();
+      this.refreshChart();
     });
   };
 
@@ -87,6 +128,7 @@ class AnaGorevler extends Component {
         gorev.tamamlandi = true;
         AnaGorevService.update(gorev.id, gorev).then(() => {
           this.retrieveGorevler();
+          this.refreshChart();
         });
       },
     });
@@ -161,6 +203,9 @@ class AnaGorevler extends Component {
                       <Button danger onClick={() => this.handleDelete(gorev.id)}>
                         Sil
                       </Button>
+                      <Button onClick={() => this.handleSearchProducts(gorev.gorevAdi)} >
+                        Tavsiyeler
+                      </Button>
                     </span>
                   ),
                 },
@@ -172,7 +217,7 @@ class AnaGorevler extends Component {
 
             {/* Aylık Görev Grafiği */}
             <Card bordered={false} style={{ marginTop: "20px" }}>
-              <EChart />
+              <EChart key={this.state.chartKey} />
             </Card>
           </Col>
 
@@ -240,6 +285,44 @@ class AnaGorevler extends Component {
             </Form.Item>
           </Form>
         </Modal>
+        {/* Arama Sonuçları Modalı */}
+        <Modal
+          title="Tavsiyeler"
+          visible={this.state.searchModalVisible}
+          onCancel={() => this.setState({ searchModalVisible: false })}
+          footer={null}
+        >
+          <List
+            itemLayout="vertical"
+            dataSource={this.state.searchResults} // Arama sonuçları state'ten çekiliyor
+            renderItem={(item) => (
+              <List.Item key={item.title}>
+                <Row>
+                  <List.Item.Meta
+                    title={
+                      <a
+                        href={item.productUrl} // Ürün bağlantısı
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.title} {/* Ürün başlığı */}
+                      </a>
+                    }
+                    description={<strong>{item.price}</strong>} // Fiyat bilgisi
+                  />
+                  <img
+                  src={item.imageUrl} // Görsel URL'si
+                  alt={item.title}
+                  style={{ width: "100px", height: "100px", objectFit: "contain" }}
+                />
+                </Row>
+                
+                
+              </List.Item>
+            )}
+          />
+        </Modal>
+
       </div>
     );
   }
